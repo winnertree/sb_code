@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto8
+  pre_build: # 빌드 전
+    commands:
+      - echo Pre-build completed
+  build:
+    commands: # 빌드 명령
+      - Build started
+      - mvn clean package
+  post_build: # 빌드 후
+    commands:
+      - echo Build completed
+
+artifacts:
+  files: # 빌드 후에 배포 단계로 옮길 파일들
+    - target/springbootApp.jar
+    - start.sh             # 만들어 줘야 함
+    - stop.sh              # ""
+  discard-paths: yes       # 파일의 목적지 상에 경로를 무시
