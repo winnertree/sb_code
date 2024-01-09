@@ -31,12 +31,17 @@ pipeline {
             }
         }
         
-        stage('build') {
+        stage('code build') {
             steps {
                 sh "mvn clean package"
             }
         }
         
+        stage('image build') {
+            steps {
+                sh "docker build -t yogunn/spring:1.0 ."
+            }
+        }
         
         stage('Test') {
             steps {
