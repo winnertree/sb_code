@@ -49,36 +49,24 @@ pipeline {
         
         stage('image push') {
             steps {
-                withDockerRegistry(credentialsId: DOCKERHUBCREDENTIAL, url: ''){
+                withDockerRegistry(credentialsId: DOCKERHUBCREDENTIAL, url: '') {
                     sh "docker push ${DOCKERHUB}:${currentBuild.number}"
                     sh "docker push ${DOCKERHUB}:latest"
-                
-                }
-                
-                post {
-                    failure {
-                        echo 'docker image push failure'
-                        sh "docker image rm -f ${DOCKERHUB}:${currentBuild.number}"
-                        sh "docker image rm -f ${DOCKERHUB}:latest"
-                    }
-                    
-                    success {
-                        echo 'docker image push success'
-                        sh "docker image rm -f ${DOCKERHUB}:${currentBuild.number}"
-                        sh "docker image rm -f ${DOCKERHUB}:latest"
-                    }
                 }
             }
-        }
-        
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+            
+            post {
+                failure {
+                    echo 'docker image push failure'
+                    sh "docker image rm -f ${DOCKERHUB}:${currentBuild.number}"
+                    sh "docker image rm -f ${DOCKERHUB}:latest"
+                }
+                
+                success {
+                    echo 'docker image push success'
+                    sh "docker image rm -f ${DOCKERHUB}:${currentBuild.number}"
+                    sh "docker image rm -f ${DOCKERHUB}:latest"
+                }
             }
         }
     }
