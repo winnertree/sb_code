@@ -6,11 +6,11 @@ pipeline {
     }
     
     environment {
-        GITNAME = 'winnertree' # 깃허브 계정
+        GITNAME = 'winnertree' 
         GITEMAIL = 'winnertree@naver.com'
-        GITWEBADD = 'https://github.com/winnertree/sb_code.git' # 레포 주소
+        GITWEBADD = 'https://github.com/winnertree/sb_code.git' 
         GITSSHADD = 'git@github.com:winnertree/sb_code.git'
-        GITCREDENTIAL = 'git_cre'   # 젠킨스 credential
+        GITCREDENTIAL = 'git_cre'  
     }
     
     stages {
