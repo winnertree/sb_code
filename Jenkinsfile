@@ -70,33 +70,34 @@ pipeline {
             }
         }
         
-        stage('k8s manifest file update') {
-              steps {
+         stage('k8s manifest file update') {
+            steps {
                 git credentialsId: GITCREDENTIAL,
-                    url: GITSSHADD,
-                    branch: 'main'
-                
+                url: GITSSHADD,
+                branch: 'main'
+        
                 // 이미지 태그 변경 후 메인 브랜치에 푸시
                 sh "git config --global user.email ${GITEMAIL}"
                 sh "git config --global user.name ${GITNAME}"
-                sh "sed -i 's@${DOCKERHUB1}:.*@${DOCKERHUB}:${currentBuild.number}@g' deployment.yml"
-                
+                sh "sed -i 's@${DOCKERHUB}:.*@${DOCKERHUB}:${currentBuild.number}@g' deployment.yml"
+        
                 sh "git add ."
                 sh "git commit -m 'fix:${DOCKERHUB} ${currentBuild.number} image versioning'"
                 sh "git branch -M main"
                 sh "git remote remove origin"
                 sh "git remote add origin ${GITSSHADD}"
                 sh "git push -u origin main"
-        
-              }
-              post {
+
+            }
+            post {
                 failure {
-                  echo 'k8s manifest file update failure'
+                echo 'k8s manifest file update failure'
                 }
                 success {
-                  echo 'k8s manifest file update success'  
+                echo 'k8s manifest file update success'  
                 }
-              }
+            }
         }
+
     }
 }
