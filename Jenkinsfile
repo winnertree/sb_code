@@ -11,6 +11,9 @@ pipeline {
         GITWEBADD = 'https://github.com/winnertree/sb_code.git' 
         GITSSHADD = 'git@github.com:winnertree/sb_code.git'
         GITCREDENTIAL = 'git_cre'  
+        
+        DOCKERHUB = 'yogunn/spring'
+        DOCKERCREDENTAIL = 'docker_cre;
     }
     
     stages {
