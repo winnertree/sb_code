@@ -9,7 +9,7 @@ pipeline {
         GITNAME = 'winnertree' 
         GITEMAIL = 'winnertree@naver.com'
         GITWEBADD = 'https://github.com/winnertree/sb_code.git' 
-        GITSSHADD = 'git@github.com:winnertree/sb_code.git'
+        GITSSHADD = 'git@github.com:winnertree/spring_deployment.git'
         GITCREDENTIAL = 'git_cre'  
         
         DOCKERHUB = 'yogunn/spring'
@@ -68,6 +68,35 @@ pipeline {
                     sh "docker image rm -f ${DOCKERHUB}:latest"
                 }
             }
+        }
+        
+        stage('k8s manifest file update') {
+              steps {
+                git credentialsId: GITCREDENTIAL,
+                    url: GITSSHADD,
+                    branch: 'main'
+                
+                // 이미지 태그 변경 후 메인 브랜치에 푸시
+                sh "git config --global user.email ${GITEMAIL}"
+                sh "git config --global user.name ${GITNAME}"
+                sh "sed -i 's@${DOCKERHUB1}:.*@${DOCKERHUB}:${currentBuild.number}@g' deployment.yml"
+                
+                sh "git add ."
+                sh "git commit -m 'fix:${DOCKERHUB} ${currentBuild.number} image versioning'"
+                sh "git branch -M main"
+                sh "git remote remove origin"
+                sh "git remote add origin ${GITSSHADD}"
+                sh "git push -u origin main"
+        
+              }
+              post {
+                failure {
+                  echo 'k8s manifest file update failure'
+                }
+                success {
+                  echo 'k8s manifest file update success'  
+                }
+              }
         }
     }
 }
